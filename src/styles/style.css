@@ -1,0 +1,240 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200;300;400;500;600;700;800&display=swap");
+
+:root {
+    --font-family: "Plus Jakarta Sans", serif;
+    --color-text: #7c8fac;
+    --color-background: #202936;
+    --color-selected: #5d87ff;
+    --color-border: #333f55;
+    --color-white: #fff;
+    --color-hover: #253662;
+}
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-family), serif;
+    color: var(--color-text);
+    background-color: var(--color-background);
+}
+
+button {
+    all: unset;
+    cursor: pointer;
+}
+
+/*Note Sidebar*/
+.note-sidebar {
+    width: 270px;
+    border-right: 1px solid var(--color-border);
+    height: 100%;
+    flex-shrink: 0;
+    background: var(--color-background);
+    position: fixed;
+    padding: 24px;
+    transition: width 0.3s ease-in-out;
+}
+
+.note-sidebar.active {
+    width: 90px;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.note-sidebar h1 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.note-sidebar.active h1 {
+    display: none;
+}
+
+.note-sidebar.active .icon-meh {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    height: 22px;
+}
+
+.note-sidebar.active .icon-name {
+    display: none;
+}
+
+.note-sidebar.active:hover,
+.note-sidebar.active:hover h1,
+.note-sidebar.active:hover .icon-name
+{
+    display: block;
+    width: 270px;
+}
+
+.note-sidebar.active:hover .icon-meh {
+    display: none;
+}
+
+.note-sidebar__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 36px;
+}
+
+.note-sidebar__header h1 {
+    font-weight: 700;
+    font-size: 26px;
+}
+
+.note-sidebar__header .icon,
+.note-sidebar__header .icon-meh {
+    display: none;
+    height: 22px;
+    width: 22px;
+    align-items: center;
+    justify-content: center;
+}
+
+.note-sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 36px;
+}
+
+.sidebar-link {
+    all: unset;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    font-weight: 400;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.sidebar-link:hover {
+    color: var(--color-selected);
+    background: var(--color-hover);
+}
+
+.sidebar-link.active {
+    color: var(--color-white);
+    background-color: var(--color-selected);
+}
+
+.sidebar-link span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+}
+
+.sidebar-link .icon {
+    width: 20px;
+    height: 20px;
+}
+
+/*Note Header*/
+.note-header {
+    margin-left: 270px;
+    padding: 24px;
+    transition: margin-left 0.3s ease;
+}
+
+.note-sidebar.active + .note-header {
+    margin-left: 90px;
+}
+
+.note-header__component {
+    display: flex;
+    gap: 8px;
+}
+
+.note-header__component button {
+    display: flex;
+    padding: 10px;
+    border-radius: 50%;
+}
+
+.note-header__component button:hover {
+    background: var(--color-hover);
+    color: var(--color-selected);
+}
+
+.note-header__component .icon {
+    width: 20px;
+    height: 20px;
+}
+
+.note-header__component button.none {
+    display: none;
+}
+
+.note-header__component .search-input  {
+    all: unset;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    height: 36px;
+    margin-left: 8px;
+    padding: 0 8px;
+    font-size: 14px;
+    width: 0;
+    opacity: 0;
+    transition: width 0.3s ease, opacity 0.3s ease;
+}
+
+.note-header__component .search-input.active {
+    width: 50%;
+    opacity: 1;
+}
+
+.note-header__component .search-input::placeholder {
+    color: var(--color-text);
+}
+
+@media (max-width: 1300px) {
+    /* Note Sidebar */
+    .note-sidebar {
+        width: 0;
+        left: -90px;
+        overflow: hidden;
+        transition: left 0.3s ease-in-out, width 0.3s ease-in-out;
+    }
+
+    .note-sidebar.active {
+        width: 270px;
+        left: 0;
+        display: block;
+        z-index: 99;
+    }
+
+    .note-sidebar.active h1,
+    .note-sidebar.active .icon,
+    .note-sidebar.active .icon-name {
+        display: block;
+    }
+
+    .note-sidebar.active .icon-meh {
+        display: none;
+    }
+
+    /* Note Header */
+    .note-header {
+        left: 0;
+        margin-left: 0;
+    }
+
+    .note-sidebar.active + .note-header {
+        left: 0;
+        margin-left: 0;
+    }
+}
+
