@@ -1,7 +1,7 @@
 import NotesItem from "./NotesItem.jsx";
 import PropTypes from "prop-types";
 
-function NotesList({notes, onDelete, onAchieve}) {
+function NotesList({notes, onDelete, onArchive}) {
     return (
         <div className="notes-list">
             {
@@ -11,7 +11,7 @@ function NotesList({notes, onDelete, onAchieve}) {
                             key={note.id}
                             id={note.id}
                             onDelete={onDelete}
-                            onAchieve={onAchieve}
+                            onArchive={onArchive}
                             archived={note.archived}
                             {...note} />
                     ))
@@ -26,7 +26,7 @@ function NotesList({notes, onDelete, onAchieve}) {
 NotesList.propTypes = {
     notes: PropTypes.array.isRequired,
     onDelete: PropTypes.func.isRequired,
-    onAchieve: PropTypes.func.isRequired,
+    onArchive: PropTypes.func.isRequired,
 };
 
 export default NotesList;

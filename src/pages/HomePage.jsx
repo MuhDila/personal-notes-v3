@@ -1,82 +1,106 @@
-import {FiCloud, FiCloudOff, FiEdit, FiHome, FiList, FiMeh, FiMenu, FiSearch, FiX} from "react-icons/fi";
-import {Link, useLocation} from "react-router-dom";
-import {useState} from "react";
+import React from "react";
 import NotesList from "../component/NotesList.jsx";
-import {filterNotes, getNotes} from "../utils/data.js";
+import { getNotes, deleteNote, archiveNote, unArchiveNote, filterNotes } from "../utils/data.js";
+import NotesHeader from "../component/NotesHeader.jsx";
+import NotesFilter from "../component/NotesFilter.jsx";
+import NotesSidebar from "../component/NotesSidebar.jsx";
+import {useSearchParams} from "react-router-dom";
+import PropTypes from "prop-types";
 
-function HomePage() {
-    const location = useLocation();
-    const [searchActive, setSearchActive] = useState(false);
-    const [sidebarActive, setSidebarActive] = useState(false);
-    const [filterActive, setFilterActive] = useState("all");
+function HomeWrapper() {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const defaultKeyword = searchParams.get("keyword") || "";
+    const defaultFilter = searchParams.get("filter") || "all";
 
-    const notes = filterNotes(getNotes(), filterActive);
+    const updateSearchParams = (keyword, filter) => {
+        const params = new URLSearchParams();
+        if (keyword) params.set("keyword", keyword);
+        if (filter) params.set("filter", filter);
+        setSearchParams(params);
+    };
 
     return (
-        <div className="home-page">
-            <div className={`note-sidebar ${sidebarActive ? 'active' : ''}`}>
-                <div className="note-sidebar__header">
-                    <h1>Personal Notes</h1>
-                    <FiMeh className="icon-meh"/>
-                    <button onClick={() => setSidebarActive(!sidebarActive)}>
-                        <FiX className="icon"/>
-                    </button>
-                </div>
-                <nav className="note-sidebar-nav">
-                    <Link to="/" className={`sidebar-link ${location.pathname === '/' ? 'active' : ''}`}>
-                        <span>
-                            <FiHome className="icon"/> <span className="icon-name">Modern</span>
-                        </span>
-                    </Link>
-                    <Link to="/create" className={`sidebar-link ${location.pathname === '/create' ? 'active' : ''}`}>
-                        <span>
-                            <FiEdit className="icon"/> <span className="icon-name">Create</span>
-                        </span>
-                    </Link>
-                </nav>
-            </div>
-
-            <div className="note-layout">
-                <div className="note-header">
-                    <button onClick={() => setSidebarActive(!sidebarActive)}>
-                        <FiMenu className="icon"/>
-                    </button>
-                    <button className={`button ${location.pathname === '/create' ? 'none' : ''}`}
-                            onClick={() => setSearchActive(!searchActive)}>
-                        <FiSearch className="icon"/>
-                    </button>
-                    <input
-                        className={`search-input ${searchActive ? 'active' : ''}`}
-                        type="text"
-                        placeholder="Search..."
-                    />
-                </div>
-
-                <div className="note-filter">
-                    <button className={`note-filter__button ${filterActive === "all" ? "active" : ""}`}
-                            onClick={() => setFilterActive("all")}>
-                        <FiList className="icon"/> <span>All Notes</span>
-                    </button>
-                    <button className={`note-filter__button ${filterActive === "archived" ? "active" : ""}`}
-                            onClick={() => setFilterActive("archived")}>
-                        <FiCloud className="icon"/> <span>Archived</span>
-                    </button>
-                    <button className={`note-filter__button ${filterActive === "unarchived" ? "active" : ""}`}
-                            onClick={() => setFilterActive("unarchived")}>
-                        <FiCloudOff className="icon"/> <span>Unarchived</span>
-                    </button>
-                </div>
-
-                <div className="note-body">
-                    <NotesList
-                        notes={notes}
-                        onDelete={null}
-                        onAchieve={null}
-                    />
-                </div>
-            </div>
-        </div>
+        <HomePage
+            defaultKeyword={defaultKeyword}
+            defaultFilter={defaultFilter}
+            updateSearchParams={updateSearchParams}
+        />
     );
 }
 
-export default HomePage;
+class HomePage extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            searchQuery: props.defaultKeyword || "",
+            filterActive: props.defaultFilter || "all",
+            searchActive: false,
+            sidebarActive: false,
+            notes: getNotes(),
+        };
+    }
+
+    handleDelete = (noteId) => {
+        deleteNote(noteId);
+        this.setState({ notes: getNotes() });
+    };
+
+    handleArchive = (noteId, archived) => {
+        if (archived) {
+            unArchiveNote(noteId);
+        } else {
+            archiveNote(noteId);
+        }
+        this.setState({ notes: getNotes() });
+    };
+
+    toggleSidebar = () => {
+        this.setState((prevState) => ({ sidebarActive: !prevState.sidebarActive }));
+    };
+
+    setSearchQuery = (query) => {
+        this.setState({ searchQuery: query });
+    };
+
+    setFilterActive = (filter) => {
+        this.setState({ filterActive: filter });
+    };
+
+    setSearchActive = (active) => {
+        this.setState({ searchActive: active });
+    };
+
+    render() {
+        const { searchQuery, filterActive, searchActive, sidebarActive, notes } = this.state;
+        const filteredNotes = filterNotes(notes, filterActive).filter((note) =>
+            note.title.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+
+        return (
+            <div className="home-page">
+                <NotesSidebar sidebarActive={sidebarActive} toggleSidebar={this.toggleSidebar} />
+                <div className="note-layout">
+                    <NotesHeader
+                        searchActive={searchActive}
+                        setSearchActive={this.setSearchActive}
+                        searchQuery={searchQuery}
+                        setSearchQuery={this.setSearchQuery}
+                        toggleSidebar={this.toggleSidebar}
+                    />
+                    <NotesFilter filterActive={filterActive} setFilterActive={this.setFilterActive} />
+                    <div className="note-body">
+                        <NotesList notes={filteredNotes} onDelete={this.handleDelete} onArchive={this.handleArchive} />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+HomePage.propTypes = {
+    defaultKeyword: PropTypes.string.isRequired,
+    defaultFilter: PropTypes.string.isRequired,
+    updateSearchParams: PropTypes.func.isRequired,
+};
+
+export default HomeWrapper;

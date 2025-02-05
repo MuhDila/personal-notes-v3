@@ -197,7 +197,7 @@ button, a {
 }
 
 .note-header .search-input.active {
-    width: 50%;
+    width: 100%;
     opacity: 1;
 }
 
