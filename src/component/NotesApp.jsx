@@ -1,5 +1,6 @@
 import {Route, Routes} from "react-router-dom";
 import HomePage from "../pages/HomePage.jsx";
+import CreatePage from "../pages/CreatePage.jsx";
 
 function NotesApp() {
     return (
@@ -9,7 +10,7 @@ function NotesApp() {
                     <HomePage/>
                 }/>
                 <Route path="/create" element={
-                    <p>Create</p>
+                    <CreatePage/>
                 }/>
                 <Route path="/notes/:id" element={
                     <p>Detail</p>

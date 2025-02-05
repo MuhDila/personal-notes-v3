@@ -7,7 +7,8 @@ function NotesHeader({searchActive, setSearchActive, searchQuery, setSearchQuery
             <button onClick={toggleSidebar}>
                 <FiMenu className="icon"/>
             </button>
-            <button className={`button`} onClick={() => setSearchActive(!searchActive)}>
+            <button className={`button ${location.pathname === '/create' ? 'none' : ''}`}
+                    onClick={() => setSearchActive(!searchActive)}>
                 <FiSearch className="icon"/>
             </button>
             <input
@@ -23,9 +24,9 @@ function NotesHeader({searchActive, setSearchActive, searchQuery, setSearchQuery
 
 NotesHeader.propTypes = {
     searchActive: PropTypes.bool.isRequired,
-    setSearchActive: PropTypes.func.isRequired,
-    searchQuery: PropTypes.string.isRequired,
-    setSearchQuery: PropTypes.func.isRequired,
+    setSearchActive: PropTypes.func,
+    searchQuery: PropTypes.string,
+    setSearchQuery: PropTypes.func,
     toggleSidebar: PropTypes.func.isRequired,
 };
 
