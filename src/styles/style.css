@@ -42,6 +42,7 @@ button, a {
     position: fixed;
     padding: 24px;
     transition: width 0.3s ease-in-out;
+    z-index: 99;
 }
 
 .note-sidebar.active {
@@ -329,7 +330,6 @@ button, a {
 
 .note-input__title {
     font-size: 18px;
-    color: var(--color-white);
     padding: 8px 20px;
     border-bottom: 1px solid var(--color-border);
 }
@@ -392,6 +392,15 @@ button, a {
 .note-input button:hover {
     background: var(--color-selected);
     color: var(--color-white);
+}
+
+.not-found-page {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
 @media (max-width: 1300px) {
