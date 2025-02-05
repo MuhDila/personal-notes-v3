@@ -1,8 +1,21 @@
-import NotesSidebar from "./NotesSidebar.jsx";
+import {Route, Routes} from "react-router-dom";
+import HomePage from "../pages/HomePage.jsx";
 
 function NotesApp() {
     return (
-        <NotesSidebar />
+        <div className="note-app">
+            <Routes>
+                <Route path="/" element={
+                    <HomePage/>
+                }/>
+                <Route path="/create" element={
+                    <p>Create</p>
+                }/>
+                <Route path="/notes/:id" element={
+                    <p>Detail</p>
+                }/>
+            </Routes>
+        </div>
     );
 }
 

@@ -1,14 +1,19 @@
+import {FiCloud, FiCloudOff, FiEdit, FiHome, FiList, FiMeh, FiMenu, FiSearch, FiX} from "react-icons/fi";
 import {Link, useLocation} from "react-router-dom";
-import {FiX, FiEdit, FiHome, FiMenu, FiSearch, FiMeh} from "react-icons/fi";
 import {useState} from "react";
+import NotesList from "../component/NotesList.jsx";
+import {filterNotes, getNotes} from "../utils/data.js";
 
-function NotesSidebar() {
+function HomePage() {
     const location = useLocation();
     const [searchActive, setSearchActive] = useState(false);
     const [sidebarActive, setSidebarActive] = useState(false);
+    const [filterActive, setFilterActive] = useState("all");
+
+    const notes = filterNotes(getNotes(), filterActive);
 
     return (
-        <>
+        <div className="home-page">
             <div className={`note-sidebar ${sidebarActive ? 'active' : ''}`}>
                 <div className="note-sidebar__header">
                     <h1>Personal Notes</h1>
@@ -46,9 +51,32 @@ function NotesSidebar() {
                         placeholder="Search..."
                     />
                 </div>
+
+                <div className="note-filter">
+                    <button className={`note-filter__button ${filterActive === "all" ? "active" : ""}`}
+                            onClick={() => setFilterActive("all")}>
+                        <FiList className="icon"/> <span>All Notes</span>
+                    </button>
+                    <button className={`note-filter__button ${filterActive === "archived" ? "active" : ""}`}
+                            onClick={() => setFilterActive("archived")}>
+                        <FiCloud className="icon"/> <span>Archived</span>
+                    </button>
+                    <button className={`note-filter__button ${filterActive === "unarchived" ? "active" : ""}`}
+                            onClick={() => setFilterActive("unarchived")}>
+                        <FiCloudOff className="icon"/> <span>Unarchived</span>
+                    </button>
+                </div>
+
+                <div className="note-body">
+                    <NotesList
+                        notes={notes}
+                        onDelete={null}
+                        onAchieve={null}
+                    />
+                </div>
             </div>
-        </>
+        </div>
     );
 }
 
-export default NotesSidebar;
+export default HomePage;
